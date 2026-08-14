@@ -1,68 +1,66 @@
 # dsh-theme-plugin
 
-**作者：Xu Yuanshan · 2026-08-14 · MIT**
+Theme studio for the DeepSeek Harness (DSH) Web GUI: five built-in presets plus fully customizable light/dark palettes — accent, background, foreground, UI and code fonts, translucent sidebar and contrast — applied instantly, with no page refresh.
 
-为 DSH Web GUI 打造的「主题工作室」插件——**5 套内置预设 + 完全自定义**（Codex 暖色 / Nord / Solarized / Graphite / 自定义调色板，允许逐字段覆盖）。
+## Features
 
-## 功能
+- 🎨 **5 built-in presets** — `codex-warm`, `nord`, `solarized`, `graphite`, plus the stock DeepSeek theme
+- 🖌️ **Full customization** — per-mode (`light.*` / `dark.*`) accent, background, foreground, UI font, code font, translucent sidebar and contrast; `custom` mode starts from scratch
+- ⚡ **Instant hot-swap** — a Settings GUI ("Theme Studio") applies changes immediately through the official `ctx.theme.overrideTokens` API; light/dark follow the system preference
+- 💾 **Persistent** — the selection is saved in browser `localStorage` and survives reloads
+- 🧮 **70+ derived tokens** — three colors plus a contrast value expand into the whole semantic token set (borders, layers, scrollbar, tooltip, code blocks, bubbles, sidebar states…)
+- 🪟 **Translucent sidebar** — real frosted sidebar via the `--dsw-specific-sidebar-fill` variable
+- 🔌 **Official seams only** — host-side injection through `webServer.tapIndex`, no patched vendor files
 
-| 字段 | 类型 | 说明 |
-|---|---|---|
-| `preset` | 枚举 | 选一个预设作为基底（详见下表） |
-| `light.accent` | 颜色 | 浅色主题的强调色（主按钮、链接等） |
-| `light.background` | 颜色 | 浅色背景 |
-| `light.foreground` | 颜色 | 浅色主文字 |
-| `light.uiFont` | CSS font-family | 浅色 UI 字体 |
-| `light.codeFont` | CSS font-family | 浅色代码字体 |
-| `light.translucentSidebar` | `preset` / `on` / `off` | 半透明侧边栏 |
-| `light.contrast` | 0–100 | 浅色对比度 |
-| `dark.*` | 同上 | 深色版套对应字段 |
+## Installation
 
-空字符串 = 用预设值；`contrast: -1` = 用预设值；`translucentSidebar: 'preset'` = 用预设值。任意字段留空就完全不覆盖。
-
-## 设置页热切换（推荐用法）
-
-插件带官方 Client half（`dsh.client` web bundle）：重启后进入 **设置 → 主题工作室**，全部配置均可通过 GUI 完成：
-
-- **主题预设**：DeepSeek 默认 / Codex 暖色 / Nord / Solarized / Graphite，一键切换；
-- **强调色 / 背景色 / 前景色**：颜色选择器，支持「跟随预设」复位；
-- **界面字体 / 代码字体**：下拉选择常用字体栈；
-- **半透明侧边栏**：跟随预设 / 开启 / 关闭；
-- **对比度**：滑条 0–100，可恢复预设值。
-
-所有切换通过官方 `ctx.theme.overrideTokens` 应用 —— 主题呈现器把 token 写成 `<body>` 内联样式，**立即生效、无需刷新页面**（深浅色自动跟随系统的明暗偏好）。选择保存在浏览器 `localStorage`，刷新后保持。`cordis.patch.yml` 的 config 仍是首次打开的默认值，设置页选择优先于 config。
-
-注意：`stock`（DeepSeek 默认）不派生颜色，此时颜色控件禁用，仅字体可覆盖。
-
-## 预设
-
-| 预设 | 风格 | 浅色背景 / 前景 / 强调 | 深色背景 / 前景 / 强调 |
-|---|---|---|---|
-| `stock` | DeepSeek 默认 | （不覆盖） | （不覆盖） |
-| `codex-warm` | Codex 暖色（截图复刻） | #F5F3EE / #1D1B16 / #DA7756 | #2D2D2B / #F9F9F7 / #CC7D5E |
-| `nord` | Nord 冷色 | #ECEFF4 / #2E3440 / #5E81AC | #2E3440 / #ECEFF4 / #88C0D0 |
-| `solarized` | Solarized | #FDF6E3 / #657B83 / #B58900 | #002B36 / #839496 / #268BD2 |
-| `graphite` | 灰阶极简 | #FAFAFA / #171717 / #525252 | #171717 / #FAFAFA / #A3A3A3 |
-| `custom` | 完全自定义 | 由 `light.*` / `dark.*` 字段提供 | 同左 |
-
-## 实现机制
-
-- **官方扩展点**：用 `@deepseek-ai/dsh-host-webserver` 的 `webServer.tapIndex(html => ...)` 在每次响应 index.html 时插入一段 `<style>`（放在 `</head>` 前、样式表 link 之后，级联上后声明生效）。和官方 `ui-theme` 注入 boot theme 用的是同一个接缝。
-- **覆盖范围**：用更高优先级的 `html body` / `html body[data-ds-dark-theme]`（特异性 0,0,0,2 / 0,0,1,2），压过主题静态 CSS 的同名列。
-- **派生**：给定 3 个用户色（背景/前景/强调）+ 对比度，函数式推导出 70+ 个语义令牌（border l1–l4、layer 1–3、scrollbar、tooltip、markdown code block、bubble、sidebar 状态等）。状态色（success/error/warn）保持 stock 用途。
-- **透明边栏**：`--dsw-specific-sidebar-fill` 会被设为 `rgba(mix(bg,fg,3%), 0.65)`——该变量已被 AppFrame / SidebarRoot / WorkspaceBrowser / TrajectoryTable 消费，半透明侧边栏真实生效。
-
-## 安装
+Requires DeepSeek Harness with the web profile enabled. Install from the official registry:
 
 ```sh
 dsh plugin --profile web add github:BeiZi6/dsh-theme-plugin
 ```
 
-重启 `dsh web` 生效（HMR 会热更新配置，但插件首次挂载需要重启）。
+Restart `dsh web` for the plugin to take effect.
 
-## 自定义
+To remove:
 
-编辑 `$DSH_HOME/profiles/web/cordis.patch.yml`（或更高优先级：`$DSH_HOME/cordis.patch.yml` / `--patch` 覆盖），覆盖该行——注意：**只写 `id` 和 `config`，不要写 `name`、不要包在 `insert:` 里**（那样会变成「再插入一行同 id 的记录」，loader 会报 duplicate id）：
+```sh
+dsh plugin --profile web remove dsh-theme-plugin
+```
+
+## Usage
+
+### Settings GUI (recommended)
+
+After a restart, open **Settings → Theme Studio**:
+
+- **Preset** — one-click chips: DeepSeek default / Codex warm / Nord / Solarized / Graphite / Custom
+- **Colors** — color pickers for accent, background and foreground, with a "follow preset" reset
+- **Fonts** — dropdowns for the UI font and the code font (common stacks included)
+- **Translucent sidebar** — follow preset / on / off
+- **Contrast** — slider 0–100 with preset restore
+
+Every change applies instantly and persists locally; GUI selections take priority over host config.
+
+> The `stock` preset derives no palette: color controls are disabled and only fonts can be overridden.
+
+### Config reference
+
+| Field | Type | Description |
+|---|---|---|
+| `preset` | enum | `stock` · `codex-warm` · `nord` · `solarized` · `graphite` · `custom` (default `codex-warm`) |
+| `light.accent` | color | accent for light mode (primary buttons, links, …) |
+| `light.background` | color | light-mode background |
+| `light.foreground` | color | light-mode primary text |
+| `light.uiFont` | CSS `font-family` | UI font stack |
+| `light.codeFont` | CSS `font-family` | code font stack |
+| `light.translucentSidebar` | enum | `preset` · `on` · `off` |
+| `light.contrast` | number | 0–100; `-1` = keep preset value |
+| `dark.*` | — | same fields for dark mode |
+
+Empty strings mean "keep the preset value"; unset fields are not overridden at all.
+
+Example — merge into the web profile patch (`$DSH_HOME/profiles/web/cordis.patch.yml`):
 
 ```yaml
 - id: theme-plugin
@@ -86,10 +84,43 @@ dsh plugin --profile web add github:BeiZi6/dsh-theme-plugin
       contrast: 70
 ```
 
-只改某个字段（比如只要换强调色），其它字段填空白的字符串 / `preset` / `-1`。
+Only set the fields you want to change; leave the rest blank (`''` / `preset` / `-1`).
 
-## 卸载
+### Presets
 
-```sh
-dsh plugin --profile web remove dsh-theme-plugin
-```
+| Preset | Style | Light bg / fg / accent | Dark bg / fg / accent |
+|---|---|---|---|
+| `stock` | DeepSeek default | — (no override) | — (no override) |
+| `codex-warm` | Codex warm | `#F5F3EE` / `#1D1B16` / `#DA7756` | `#2D2D2B` / `#F9F9F7` / `#CC7D5E` |
+| `nord` | Nord cool | `#ECEFF4` / `#2E3440` / `#5E81AC` | `#2E3440` / `#ECEFF4` / `#88C0D0` |
+| `solarized` | Solarized | `#FDF6E3` / `#657B83` / `#B58900` | `#002B36` / `#839496` / `#268BD2` |
+| `graphite` | Grayscale minimal | `#FAFAFA` / `#171717` / `#525252` | `#171717` / `#FAFAFA` / `#A3A3A3` |
+
+`custom` starts from the `codex-warm` palette and takes every value from `light.*` / `dark.*`.
+
+## How it works
+
+- **Host half** (`index.js`) — registers a `webServer.tapIndex` hook so every served `index.html` gets a `<style>` block injected before `</head>`, after the stylesheet links, letting the overrides win by cascade order. This is the same official seam the built-in UI theme uses.
+- **Specificity** — selectors are written as `html body` / `html body[data-ds-dark-theme]` to outrank the theme's static CSS variables.
+- **Token derivation** — from background / foreground / accent plus a contrast factor, a small functional engine derives 70+ semantic tokens (border levels, layers, scrollbar, tooltip, markdown code blocks, bubbles, sidebar states…). Status colors (success / error / warn) keep their stock meaning.
+- **Translucent sidebar** — `--dsw-specific-sidebar-fill` is emitted as `rgba(mix(bg, fg, 3%), 0.65)` when enabled; AppFrame / SidebarRoot / WorkspaceBrowser / TrajectoryTable consume that variable directly.
+- **Client half** (`client.js`) — a web-shell module that registers a "Theme Studio" section under Settings and writes every change via `ctx.theme.overrideTokens`; the theme presenter emits the tokens inline on `<body>`, so the effect is instant and survives until the next selection. Selections persist in `localStorage`.
+
+## Compatibility
+
+- DeepSeek Harness Web GUI (`dsh web`)
+- Node.js >= 22.19
+- Peer dependencies: `@deepseek-ai/cordis` (^4), `@deepseek-ai/dsh-host-webserver` (^0.1.0-rc.6)
+
+## License
+
+MIT © Xu Yuanshan
+
+## Links
+
+- Repository: <https://github.com/BeiZi6/dsh-theme-plugin>
+- Issues: <https://github.com/BeiZi6/dsh-theme-plugin/issues>
+
+## 中文简介
+
+为 DeepSeek Harness (DSH) Web GUI 打造的主题工作室插件:5 套内置预设(Codex 暖色 / Nord / Solarized / Graphite / 默认)+ 完全自定义;设置页内热切换、立即生效并持久化;通过官方 `webServer.tapIndex` 接缝向 index.html 注入主题 CSS,由背景/前景/强调三色与对比度函数式推导 70+ 语义令牌,并支持半透明侧边栏。
