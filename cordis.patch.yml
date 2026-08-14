@@ -1,0 +1,26 @@
+# dsh-theme-plugin bundle layer. Provides a "theme studio" with presets and
+# per-mode custom overrides for accent / background / foreground / fonts /
+# translucent sidebar / contrast. Values are CSS color/font lists; names with
+# spaces must be quoted. The row's config is replaced entirely by later layers
+# targeting the same id, so restate every key you keep.
+- insert:
+    - id: theme-plugin
+      name: dsh-theme-plugin
+      config:
+        preset: codex-warm
+        light:
+          accent: ''
+          background: ''
+          foreground: ''
+          uiFont: ''
+          codeFont: ''
+          translucentSidebar: preset
+          contrast: -1
+        dark:
+          accent: ''
+          background: ''
+          foreground: ''
+          uiFont: ''
+          codeFont: ''
+          translucentSidebar: preset
+          contrast: -1
