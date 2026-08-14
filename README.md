@@ -2,9 +2,7 @@
 
 **作者：Xu Yuanshan · 2026-08-14 · MIT**
 
-为 DSH Web GUI（http://127.0.0.1:3080）打造的"主题工作室"插件——
-
-**5 套内置预设 + 完全自定义**（每套预设都基于 Codex 风格的暖色编辑风，但支持 6 套 Codex 经典调色板，并允许你逐字段覆盖）。
+为 DSH Web GUI 打造的「主题工作室」插件——**5 套内置预设 + 完全自定义**（Codex 暖色 / Nord / Solarized / Graphite / 自定义调色板，允许逐字段覆盖）。
 
 ## 功能
 
@@ -27,7 +25,7 @@
 插件带官方 Client half（`dsh.client` web bundle）：重启后进入 **设置 → 主题工作室**，全部配置均可通过 GUI 完成：
 
 - **主题预设**：DeepSeek 默认 / Codex 暖色 / Nord / Solarized / Graphite，一键切换；
-- **强调色 / 背景色 / 前景色**：颜色选择器，支持"跟随预设"复位；
+- **强调色 / 背景色 / 前景色**：颜色选择器，支持「跟随预设」复位；
 - **界面字体 / 代码字体**：下拉选择常用字体栈；
 - **半透明侧边栏**：跟随预设 / 开启 / 关闭；
 - **对比度**：滑条 0–100，可恢复预设值。
@@ -54,7 +52,7 @@
 - **派生**：给定 3 个用户色（背景/前景/强调）+ 对比度，函数式推导出 70+ 个语义令牌（border l1–l4、layer 1–3、scrollbar、tooltip、markdown code block、bubble、sidebar 状态等）。状态色（success/error/warn）保持 stock 用途。
 - **透明边栏**：`--dsw-specific-sidebar-fill` 会被设为 `rgba(mix(bg,fg,3%), 0.65)`——该变量已被 AppFrame / SidebarRoot / WorkspaceBrowser / TrajectoryTable 消费，半透明侧边栏真实生效。
 
-## 安装（GitHub）
+## 安装
 
 ```sh
 dsh plugin --profile web add github:BeiZi6/dsh-theme-plugin
@@ -62,15 +60,9 @@ dsh plugin --profile web add github:BeiZi6/dsh-theme-plugin
 
 重启 `dsh web` 生效（HMR 会热更新配置，但插件首次挂载需要重启）。
 
-### 本地开发（可选）
-
-```sh
-dsh plugin --profile web add E:\DSH\dsh-theme-plugin
-```
-
 ## 自定义
 
-编辑 `$DSH_HOME/profiles/web/cordis.patch.yml`（或更高优先级：`$DSH_HOME/cordis.patch.yml` / `--patch` 覆盖），覆盖该行——注意：**只写 `id` 和 `config`，不要写 `name`、不要包在 `insert:` 里**（那样会变成"再插入一行同 id 的记录"，loader 会报 duplicate id）：
+编辑 `$DSH_HOME/profiles/web/cordis.patch.yml`（或更高优先级：`$DSH_HOME/cordis.patch.yml` / `--patch` 覆盖），覆盖该行——注意：**只写 `id` 和 `config`，不要写 `name`、不要包在 `insert:` 里**（那样会变成「再插入一行同 id 的记录」，loader 会报 duplicate id）：
 
 ```yaml
 - id: theme-plugin
@@ -101,11 +93,3 @@ dsh plugin --profile web add E:\DSH\dsh-theme-plugin
 ```sh
 dsh plugin --profile web remove dsh-theme-plugin
 ```
-
-## 不安装的临时试用
-
-```sh
-dsh web --patch E:\DSH\dsh-theme-plugin\dev.patch.yml
-```
-
-（dev.patch.yml 是 `codex-warm` 预设加一个自定义红色强调色覆盖）
