@@ -2,6 +2,26 @@
   "name": "dsh-theme-plugin",
   "version": "0.1.0",
   "description": "DSH Web GUI theme studio with presets and per-mode customization: accent, background, foreground, fonts, translucent sidebar, and contrast. Overrides CSS tokens in every served index.html via the official webServer.tapIndex seam.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BeiZi6/dsh-theme-plugin.git"
+  },
+  "homepage": "https://github.com/BeiZi6/dsh-theme-plugin#readme",
+  "bugs": {
+    "url": "https://github.com/BeiZi6/dsh-theme-plugin/issues"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "cordis",
+    "plugin",
+    "theme",
+    "web-gui",
+    "css-tokens"
+  ],
+  "engines": {
+    "node": ">=22.19.0"
+  },
   "type": "module",
   "main": "index.js",
   "exports": {
@@ -31,7 +51,9 @@
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "^4.0.1",
-    "@deepseek-ai/dsh-host-webserver": "^0.1.0-rc.6",
+    "@deepseek-ai/dsh-host-webserver": "^0.1.0-rc.6"
+  },
+  "dependencies": {
     "@deepseek-ai/schemastery": "^3.18.0"
   }
 }
