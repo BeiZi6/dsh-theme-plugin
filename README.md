@@ -1,5 +1,7 @@
 # dsh-theme-plugin
 
+**[English](README.md) · [简体中文](README.zh-CN.md)**
+
 Theme studio for the DeepSeek Harness (DSH) Web GUI: five built-in presets plus fully customizable light/dark palettes — accent, background, foreground, UI and code fonts, translucent sidebar and contrast — applied instantly, with no page refresh.
 
 ## Features
